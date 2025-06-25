@@ -26,6 +26,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [trendingMovies, setTrendingMovies] = useState([]);
+  const [trendingErrorMessage, setTrendingErrorMessage] = useState('');
+  const [trendingIsLoading, setTrendingIsLoading] = useState(false);
 
 
   //Debounce the search term to prevent making too many API requests
@@ -72,10 +74,17 @@ const App = () => {
 
   const loadTrendingMovies = async () => {
     try {
+      setTrendingIsLoading(true);
+      setTrendingErrorMessage('');
+
+
       const movies = await getTrendingMovies();
       setTrendingMovies(movies.documents || []);
     } catch (error) {
       console.error(`Error trending movies: ${error}`);
+      setTrendingErrorMessage('Error fecthing trending movies. Please try again later');
+    } finally {
+      setTrendingIsLoading(false);
     }
   }
 
@@ -103,14 +112,23 @@ const App = () => {
           <section className='trending' >
             <h2>Trending Movies</h2>
 
-            <ul>
-              {trendingMovies.map((movie, index) => (
-                <li key={movie.$id}>
-                  <p>{index + 1}</p>
-                  <img src={movie.poster_url} alt={movie.title} />
-                </li>
-              ))}
-            </ul>
+            {trendingIsLoading ? (
+              <div className='mt-7 mb-7' >  <Spinner /> </div>
+
+            ) : trendingErrorMessage ? (
+              <p className='text-red-500 mt-7 mb-7'>{trendingErrorMessage}</p>
+            ) : (
+              <ul>
+                {trendingMovies.map((movie, index) => (
+                  <li key={movie.$id}>
+                    <p>{index + 1}</p>
+                    <img src={movie.poster_url} alt={movie.title} />
+                  </li>
+                ))}
+              </ul>
+            )}
+
+
           </section>
         )}
 
