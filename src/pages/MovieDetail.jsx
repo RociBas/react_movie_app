@@ -1,5 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
+import ReturnButton from '../components/ReturnButton';
 
 
 const MovieDetail = () => {
@@ -24,6 +25,7 @@ const MovieDetail = () => {
         <div >
             <div className='pattern' />
             <div className='wrapper'>
+                <ReturnButton />
                 <section className='movie-detail'>
                     <div className='content'>
                         <img src={posterPath ? `https://image.tmdb.org/t/p/w500/${posterPath}` : `/no-movie.png`} alt={title} />
